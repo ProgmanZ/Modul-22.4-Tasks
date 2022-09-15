@@ -5,22 +5,25 @@ import os
 list_path = list()
 
 
-def copy_file(file_path, destination_path):
-    use_file = open('file_path', 'r')
-    dest_file = open(os.path.join(destination_path, 'new_copy_all_files.txt'), 'a')
-    for line in use_file:
-        dest_file.write(line)
-    dest_file.write('\n')
-    dest_file.write('*' * 40)
-    use_file.close()
-    dest_file.close()
+def copy_file(destination_path, files_path_list):
+    write_file = open(os.path.join(destination_path, 'new_copy_all_files.txt'), 'a')
+    for file in files_path_list:
+
+        read_file = open(file, 'r')
+        write_file.write(read_file.read())
+        write_file.write('\n')
+        write_file.write('*' * 40)
+        write_file.write('\n')
+        read_file.close()
+    write_file.close()
 
 
 def find_file(user_path, list_way):
     for element in os.listdir(user_path):
         path = os.path.join(user_path, element)
         if os.path.isfile(path):
-            list_way.append(path)
+            if path.endswith('.py'):
+                list_way.append(path)
         else:
             find_file(path, list_way)
 
@@ -29,6 +32,4 @@ user_read_path = input('Введите имя каталога из которо
 user_write_file_path = input('Введите путь по которому будет сохранен результирующий файл: ')
 
 find_file(user_read_path, list_path)
-
-for line in list_path:
-    copy_file(line, user_write_file_path)
+copy_file(user_write_file_path, list_path)
